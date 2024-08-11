@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 env:
-  MONGO_CONNECTION_STRING: mongodb://root:example@mongo:27017/invitation?authSource=admin
+  MONGO_CONNECTION_STRING: mongodb://root:example@localhost:27017/invitation?authSource=admin
 
 jobs:
   build:
