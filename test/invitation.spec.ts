@@ -56,11 +56,11 @@ describe("Test the invitation path", () => {
         const dataDb = await Invitation.findById(responseItem._id);
 
         expect(dataDb).toBeTruthy();
-        expect(dataDb.invitee).toBe(objectItem.invitee);
-        expect(dataDb.inviter).toBe(objectItem.inviter);
-        expect(dataDb.message).toBe(objectItem.message);
-        expect(dataDb.createdAt.toISOString()).toBe(responseItem.createdAt);
-        expect(dataDb._id.toString()).toBe(responseItem._id);
-        expect(dataDb.__v).toBe(0);
+        expect(dataDb?.invitee).toBe(objectItem.invitee);
+        expect(dataDb?.inviter).toBe(objectItem.inviter);
+        expect(dataDb?.message).toBe(objectItem.message);
+        expect(dataDb?.createdAt?.toISOString()).toBe(responseItem.createdAt);
+        expect(dataDb?._id?.toString()).toBe(responseItem._id);
+        expect(dataDb?.__v).toBe(0);
     });
 });
