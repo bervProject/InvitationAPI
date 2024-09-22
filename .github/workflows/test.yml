@@ -33,4 +33,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: corepack enable && yarn --immutable
       - run: yarn build
-      - run: yarn test
+      - name: Test
+        run: yarn test
+        env:
+          MONGO_CONNECTION_STRING: 'mongodb://root:example@localhost:27017/invitation?authSource=admin'

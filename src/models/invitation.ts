@@ -1,9 +1,9 @@
-import mongoose, { Schema, PopulatedDoc, Types } from "mongoose";
+import mongoose, { Schema, PopulatedDoc, Types, Document } from "mongoose";
 import { IName } from "./name";
 
 interface IInvitation {
-    inviter: Types.ObjectId;
-    invitee: Types.ObjectId;
+    inviter: PopulatedDoc<Document<Types.ObjectId> & IName>;
+    invitee: PopulatedDoc<Document<Types.ObjectId> & IName>;
     message: String;
     createdAt: Date;
 }
