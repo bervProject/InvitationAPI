@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import { rateLimit } from 'express-rate-limit';
 import bodyParser from 'body-parser';
 import invitation from './invitation';
+import name from './name';
 
 const app: Express = express();
 
@@ -21,5 +22,6 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use('/invitation', invitation);
+app.use('/name', name);
 
 export default app;
