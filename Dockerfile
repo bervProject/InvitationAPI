@@ -5,7 +5,7 @@ WORKDIR /app
 # install and use yarn 4.x
 RUN corepack enable && corepack prepare yarn@${YARN_VERSION}
 COPY package.json yarn.lock ./
-RUN apk add --no-cache git && yarn --immutable
+RUN apk add --no-cache git && yarn install --immutable
 COPY . .
 RUN yarn build
 
@@ -16,7 +16,7 @@ COPY --from=build /app/lib /app/lib
 COPY package.json yarn.lock ./
 # install and use yarn 4.x
 RUN corepack enable && corepack prepare yarn@${YARN_VERSION}
-RUN yarn --immutable --production && yarn cache clean
+RUN yarn install --immutable --production && yarn cache clean
 RUN adduser -D ia && chown -R ia /app
 USER ia
 CMD [ "yarn", "start" ]
