@@ -1,10 +1,8 @@
-FROM node:22 as build
+FROM node:22-alpine as build
 # Create app directory
 WORKDIR /app
-COPY package.json yarn.lock ./
-RUN corepack enable && yarn install --immutable
 COPY . .
-RUN yarn build
+RUN apk add --no-cache git && corepack enable && yarn install --immutable && yarn build
 
 FROM node:22-alpine as runner
 WORKDIR /app
