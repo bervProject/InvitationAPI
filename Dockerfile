@@ -2,7 +2,7 @@ FROM node:22 as build
 # Create app directory
 WORKDIR /app
 COPY package.json yarn.lock ./
-RUN apk add --no-cache git && corepack enable && yarn install --immutable
+RUN corepack enable && yarn install --immutable
 COPY . .
 RUN yarn build
 
