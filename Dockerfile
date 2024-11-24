@@ -1,4 +1,4 @@
-FROM node:22-alpine as build
+FROM node:22 as build
 # Create app directory
 WORKDIR /app
 COPY package.json yarn.lock ./
