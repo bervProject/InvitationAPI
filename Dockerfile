@@ -10,7 +10,7 @@ FROM node:22-alpine as runner
 WORKDIR /app
 COPY --from=build /app/dist /app/dist
 COPY package.json yarn.lock .yarnrc.yml ./
-RUN corepack enable && yarn install --immutable --production && yarn cache clean
+RUN corepack enable && yarn install --immutable && yarn cache clean
 RUN adduser -D ia && chown -R ia /app
 USER ia
 CMD [ "yarn", "start" ]
