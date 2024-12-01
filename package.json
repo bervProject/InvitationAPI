@@ -5,10 +5,12 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
-    "test": "jest"
+    "test": "jest",
+    "import": "nodemon src/name-loader-program.ts"
   },
   "dependencies": {
     "body-parser": "^1.20.3",
+    "csv-parse": "^5.6.0",
     "dotenv": "^16.4.5",
     "express": "^4.20.0",
     "express-rate-limit": "^7.4.0",

@@ -15,15 +15,19 @@ describe("Test the name path", () => {
     test("It should response the GET method", async () => {
         let dateNow = Date.now();
         const objectItem = {
-            username: 'berviantoleo',
+            username: 'berviantoleo-test',
             name: 'Bervianto',
             createdAt: dateNow
         };
         await Name.create(objectItem);
-        const response = await request(app).get("/name/berviantoleo");
+        const response = await request(app).get("/name/berviantoleo-test");
         expect(response.statusCode).toBe(200);
         expect(response.body.username).toBe(objectItem.username);
         expect(response.body.name).toBe(objectItem.name);
         expect(response.body.createdAt).toBe(new Date(objectItem.createdAt).toISOString());
     });
+
+    afterEach(async () => {
+        await Name.deleteMany({});
+    })
 });

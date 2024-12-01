@@ -15,14 +15,14 @@ describe("Test the invitation path", () => {
         });
     });
 
-    beforeEach(async () => {
-        await Invitation.deleteMany();
-    })
-
     afterAll(async () => {
-        await Name.deleteMany();
+        await Name.deleteMany({});
         await mongoose.disconnect();
     });
+
+    afterEach(async () => {
+        await Invitation.deleteMany({});
+    })
 
     test("It should response the GET method", async () => {
         let dateNow = Date.now();
