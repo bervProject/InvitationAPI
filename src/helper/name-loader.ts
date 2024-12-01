@@ -21,7 +21,8 @@ async function loadData() {
                 createdAt: Date.now()
             }, {
                 upsert: true,
-                returnNewDocument: true
+                returnNewDocument: true,
+                new: true
             });
             logger.info(`Saved: ${result?._id}. Result: ${JSON.stringify(result)}`);
         }
