@@ -6,7 +6,8 @@
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
     "test": "jest",
-    "import": "nodemon src/name-loader-program.ts"
+    "import": "node dist/name-loader-program.js",
+    "import:dev": "nodemon src/name-loader-program.ts"
   },
   "dependencies": {
     "body-parser": "^1.20.3",

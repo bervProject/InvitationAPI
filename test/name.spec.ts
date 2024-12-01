@@ -28,6 +28,8 @@ describe("Test the name path", () => {
     });
 
     afterEach(async () => {
-        await Name.deleteMany({});
+        await Name.deleteMany({
+            username: 'berviantoleo-test'
+        });
     })
 });

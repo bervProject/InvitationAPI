@@ -8,15 +8,26 @@ describe("Test the invitation path", () => {
     let createdName: any;
     beforeAll(async () => {
         await mongoose.connect(process.env.MONGO_CONNECTION_STRING || '');
-        createdName = await Name.create({
+    });
+
+    beforeEach(async() => {
+        createdName = await Name.findOneAndUpdate({
+            username: 'invitationleo'
+        }, {
             username: 'invitationleo',
             name: 'Bervianto',
             createdAt: new Date()
+        }, {
+            upsert: true,
+            returnNewDocument: true,
+            new: true
         });
-    });
+    })
 
     afterAll(async () => {
-        await Name.deleteMany({});
+        await Name.deleteMany({
+            username: 'invitationleo'
+        });
         await mongoose.disconnect();
     });
 

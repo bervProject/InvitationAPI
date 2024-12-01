@@ -1,8 +1,12 @@
+import mongoose from 'mongoose';
 import loader from '../src/helper/name-loader';
-import app from "../src/app";
 import Name from "../src/models/name";
 
 describe("Test the name path", () => {
+    beforeEach(async () => {
+        await mongoose.connect(process.env.MONGO_CONNECTION_STRING || '');
+    })
+
     test("Should load correctly", async () => {
         await loader();
 
@@ -12,6 +16,9 @@ describe("Test the name path", () => {
     });
 
     afterEach(async () => {
-        await Name.deleteMany({});
+        await Name.deleteMany({
+            username: 'berviantoleo'
+        });
+        await mongoose.disconnect();
     })
 });

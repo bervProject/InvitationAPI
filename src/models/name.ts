@@ -18,3 +18,4 @@ nameSchema.index({
 
 const Name = mongoose.model<IName>('Name', nameSchema);
 export default Name;
+export { nameSchema };
