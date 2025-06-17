@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ['20.x', '22.x']
+        node-version: ['22.x', '24.x']
     services:
       # Label used to access the service container
       mongo:
@@ -43,10 +43,10 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js 22.x
+      - name: Use Node.js 24.x
         uses: actions/setup-node@v4
         with:
-          node-version: 22.x
+          node-version: 24.x
       - name: Install Dependencies
         working-directory: ./infra
         run: npm i
