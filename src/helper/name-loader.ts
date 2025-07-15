@@ -3,13 +3,13 @@ import { parse } from 'csv-parse/sync';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import logger from '../logger';
-import { nameSchema } from '../models/name';
+import { IName, nameSchema } from '../models/name';
 
 dotenv.config();
 
 async function loadData(connection: mongoose.Connection) {
     const readSample = fs.readFileSync(process.env.IMPORT_FILE ?? 'sample.csv');
-    const records = parse(readSample, {
+    const records = parse<IName>(readSample, {
         columns: true,
     });
     if (Array.isArray(records)) {
