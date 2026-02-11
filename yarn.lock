@@ -3812,10 +3812,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^17.2.3":
-  version: 17.2.3
-  resolution: "dotenv@npm:17.2.3"
-  checksum: 10c0/c884403209f713214a1b64d4d1defa4934c2aa5b0002f5a670ae298a51e3c3ad3ba79dfee2f8df49f01ae74290fcd9acdb1ab1d09c7bfb42b539036108bb2ba0
+"dotenv@npm:^17.2.4":
+  version: 17.2.4
+  resolution: "dotenv@npm:17.2.4"
+  checksum: 10c0/901aeee9cb40860291bdb452f6ca66aada78438331a026b0bd86fd41b94a79752dbc6a8971f4f26e6cafef11b4a27bb12ea99c0cbe7dfa61791f194727f799e5
   languageName: node
   linkType: hard
 
@@ -4643,7 +4643,7 @@ __metadata:
     "@types/supertest": "npm:^6.0.3"
     body-parser: "npm:^2.2.2"
     csv-parse: "npm:^6.1.0"
-    dotenv: "npm:^17.2.3"
+    dotenv: "npm:^17.2.4"
     express: "npm:^5.2.0"
     express-rate-limit: "npm:^8.2.1"
     jest: "npm:^30.2.0"
