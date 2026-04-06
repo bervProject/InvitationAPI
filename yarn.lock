@@ -4099,14 +4099,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express-rate-limit@npm:^8.3.1":
-  version: 8.3.1
-  resolution: "express-rate-limit@npm:8.3.1"
+"express-rate-limit@npm:^8.3.2":
+  version: 8.3.2
+  resolution: "express-rate-limit@npm:8.3.2"
   dependencies:
     ip-address: "npm:10.1.0"
   peerDependencies:
     express: ">= 4.11"
-  checksum: 10c0/e3229938457cec617460c54ef4e90c8c254facc884729325d20ea35e3838bd273e4c611fc1f4a76f6d14c411e30d31b15e88eb4be87408615ff0aacc142511a2
+  checksum: 10c0/5b64d0691071086cdb8cfc6bcd5e761f5687cf4fabdebfe2a043ea5b4d31443637181e7be71e7ffabce76aee816daee62c1ca83250045847957da408a129f650
   languageName: node
   linkType: hard
 
@@ -4675,7 +4675,7 @@ __metadata:
     csv-parse: "npm:^6.2.1"
     dotenv: "npm:^17.3.1"
     express: "npm:^5.2.0"
-    express-rate-limit: "npm:^8.3.1"
+    express-rate-limit: "npm:^8.3.2"
     jest: "npm:^30.3.0"
     mongoose: "npm:^9.3.1"
     nodemon: "npm:^3.1.14"
