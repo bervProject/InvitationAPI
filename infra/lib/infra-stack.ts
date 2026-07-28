@@ -102,6 +102,12 @@ export class IaStack extends cdk.Stack {
         cpu: "256",
         memory: "512",
         healthCheckPath: "/",
+        scalingTarget: {
+          autoScalingMetric: "REQUEST_COUNT_PER_TARGET",
+          autoScalingTargetValue: 20,
+          minTaskCount: 1,
+          maxTaskCount: 2,
+        },
         primaryContainer: {
           image: imageUri,
           containerPort: 3030,
