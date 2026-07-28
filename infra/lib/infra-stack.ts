@@ -60,8 +60,21 @@ export class IaStack extends cdk.Stack {
       }),
     );
 
-    // Task Role - reuse existing S3 role for application runtime permissions
-    const taskRole = iam.Role.fromRoleName(this, "ia-role", "S3RoleLambda");
+    // Task Role - for application runtime permissions
+    const taskRole = new iam.Role(this, "IaTaskRole", {
+      assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
+      roleName: "IaEcsTaskRole",
+      description: "Role for application runtime permissions",
+    });
+
+    // Add S3 permissions for application data access
+    taskRole.addToPolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
+        resources: ["*"],
+      }),
+    );
 
     // Infrastructure Role - for Express Mode to manage AWS resources
     const infrastructureRole = new iam.Role(this, "IaInfrastructureRole", {
