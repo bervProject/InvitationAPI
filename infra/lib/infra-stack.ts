@@ -1,8 +1,8 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as ecr from "aws-cdk-lib/aws-ecr";
+import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as iam from "aws-cdk-lib/aws-iam";
-import * as apprunner from "@aws-cdk/aws-apprunner-alpha";
 import { Secret } from "aws-cdk-lib/aws-secretsmanager";
 
 export class IaStack extends cdk.Stack {
@@ -18,32 +18,105 @@ export class IaStack extends cdk.Stack {
 
     const secrets = Secret.fromSecretNameV2(
       this,
-      "apprunner-secret",
+      "ecs-secret",
       "dev/AppRunner/ia",
     );
 
-    // temporary role, reuse lambda
-    const role = iam.Role.fromRoleName(this, "ia-role", "S3RoleLambda");
-
-    const appRunner = new apprunner.Service(this, "ia-apprunner", {
-      instanceRole: role,
-      source: apprunner.Source.fromEcr({
-        repository: repo,
-        imageConfiguration: {
-          port: 3030,
-          environmentSecrets: {
-            MONGO_CONNECTION_STRING: apprunner.Secret.fromSecretsManager(
-              secrets,
-              "MONGO_CONNECTION_STRING",
-            ),
-          },
-        },
-        tagOrDigest: imageTag.valueAsString,
-      }),
+    // Task Execution Role - for ECS to pull images and write logs
+    const taskExecutionRole = new iam.Role(this, "IaTaskExecutionRole", {
+      assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
+      roleName: "IaEcsTaskExecutionRole",
+      description: "Role for ECS tasks to pull images and write logs",
+      managedPolicies: [
+        iam.ManagedPolicy.fromAwsManagedPolicyName(
+          "service-role/AmazonECSTaskExecutionRolePolicy",
+        ),
+      ],
     });
 
-    new cdk.CfnOutput(this, "output-ia-apprunner-url", {
-      value: appRunner.serviceUrl,
+    // Add CloudWatch Logs permissions to execution role
+    taskExecutionRole.addToPolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+        ],
+        resources: [
+          `arn:aws:logs:${this.region}:${this.account}:log-group:/aws/ecs/ia-express*`,
+        ],
+      }),
+    );
+
+    // Add Secrets Manager permissions to execution role
+    taskExecutionRole.addToPolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["secretsmanager:GetSecretValue"],
+        resources: [
+          `arn:aws:secretsmanager:${this.region}:${this.account}:secret:dev/AppRunner/ia-*`,
+        ],
+      }),
+    );
+
+    // Task Role - reuse existing S3 role for application runtime permissions
+    const taskRole = iam.Role.fromRoleName(this, "ia-role", "S3RoleLambda");
+
+    // Infrastructure Role - for Express Mode to manage AWS resources
+    const infrastructureRole = new iam.Role(this, "IaInfrastructureRole", {
+      assumedBy: new iam.ServicePrincipal("ecs.amazonaws.com"),
+      roleName: "IaEcsInfrastructureRole",
+      description: "Role for ECS Express Mode to manage infrastructure",
+      managedPolicies: [
+        iam.ManagedPolicy.fromAwsManagedPolicyName(
+          "service-role/AmazonECSInfrastructureRoleforExpressGatewayServices",
+        ),
+      ],
+    });
+
+    // Build image URI
+    const imageUri = `${repo.repositoryUri}:${imageTag.valueAsString}`;
+
+    const expressService = new ecs.CfnExpressGatewayService(
+      this,
+      "ia-ecs-express",
+      {
+        serviceName: "ia-express-service",
+        executionRoleArn: taskExecutionRole.roleArn,
+        infrastructureRoleArn: infrastructureRole.roleArn,
+        taskRoleArn: taskRole.roleArn,
+        cpu: "256",
+        memory: "512",
+        healthCheckPath: "/",
+        primaryContainer: {
+          image: imageUri,
+          containerPort: 3030,
+          environment: [
+            { name: "NODE_ENV", value: "production" },
+            { name: "PORT", value: "3030" },
+          ],
+          secrets: [
+            {
+              name: "MONGO_CONNECTION_STRING",
+              valueFrom: `${secrets.secretArn}:MONGO_CONNECTION_STRING::`,
+            },
+          ],
+          awsLogsConfiguration: {
+            logGroup: `/aws/ecs/ia-express`,
+            logStreamPrefix: "ia",
+          },
+        },
+      },
+    );
+
+    // Ensure roles are created before the service
+    expressService.node.addDependency(taskExecutionRole);
+    expressService.node.addDependency(taskRole);
+    expressService.node.addDependency(infrastructureRole);
+
+    new cdk.CfnOutput(this, "output-ia-ecs-url", {
+      value: expressService.attrEndpoint,
     });
   }
 }

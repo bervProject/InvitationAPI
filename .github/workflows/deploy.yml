@@ -43,7 +43,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-  deploy-apprunner:
+  deploy-ecs:
     runs-on: ubuntu-24.04
     environment: production
     needs: deploy-image
@@ -66,11 +66,6 @@ jobs:
         run: |
           npm install -g aws-cdk
           cdk doctor
-      - name: Prepare App Runner
-        uses: bervProject/prepare-apprunner-action@0.1.5
-        with:
-          arn: ${{ secrets.ARN }}
-          region: 'ap-southeast-1'
       - name: Deploy Infra
         working-directory: 'infra'
         run: |
