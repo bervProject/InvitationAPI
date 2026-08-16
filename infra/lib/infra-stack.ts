@@ -89,53 +89,53 @@ export class IaStack extends cdk.Stack {
     });
 
     // Build image URI
-    const imageUri = `${repo.repositoryUri}:${imageTag.valueAsString}`;
+    // const imageUri = `${repo.repositoryUri}:${imageTag.valueAsString}`;
 
-    const expressService = new ecs.CfnExpressGatewayService(
-      this,
-      "ia-ecs-express",
-      {
-        serviceName: "ia-express-service",
-        executionRoleArn: taskExecutionRole.roleArn,
-        infrastructureRoleArn: infrastructureRole.roleArn,
-        taskRoleArn: taskRole.roleArn,
-        cpu: "256",
-        memory: "512",
-        healthCheckPath: "/",
-        scalingTarget: {
-          autoScalingMetric: "REQUEST_COUNT_PER_TARGET",
-          autoScalingTargetValue: 20,
-          minTaskCount: 1,
-          maxTaskCount: 2,
-        },
-        primaryContainer: {
-          image: imageUri,
-          containerPort: 3030,
-          environment: [
-            { name: "NODE_ENV", value: "production" },
-            { name: "PORT", value: "3030" },
-          ],
-          secrets: [
-            {
-              name: "MONGO_CONNECTION_STRING",
-              valueFrom: `${secrets.secretArn}:MONGO_CONNECTION_STRING::`,
-            },
-          ],
-          awsLogsConfiguration: {
-            logGroup: `/aws/ecs/ia-express`,
-            logStreamPrefix: "ia",
-          },
-        },
-      },
-    );
+    // const expressService = new ecs.CfnExpressGatewayService(
+    //   this,
+    //   "ia-ecs-express",
+    //   {
+    //     serviceName: "ia-express-service",
+    //     executionRoleArn: taskExecutionRole.roleArn,
+    //     infrastructureRoleArn: infrastructureRole.roleArn,
+    //     taskRoleArn: taskRole.roleArn,
+    //     cpu: "256",
+    //     memory: "512",
+    //     healthCheckPath: "/",
+    //     scalingTarget: {
+    //       autoScalingMetric: "REQUEST_COUNT_PER_TARGET",
+    //       autoScalingTargetValue: 20,
+    //       minTaskCount: 1,
+    //       maxTaskCount: 2,
+    //     },
+    //     primaryContainer: {
+    //       image: imageUri,
+    //       containerPort: 3030,
+    //       environment: [
+    //         { name: "NODE_ENV", value: "production" },
+    //         { name: "PORT", value: "3030" },
+    //       ],
+    //       secrets: [
+    //         {
+    //           name: "MONGO_CONNECTION_STRING",
+    //           valueFrom: `${secrets.secretArn}:MONGO_CONNECTION_STRING::`,
+    //         },
+    //       ],
+    //       awsLogsConfiguration: {
+    //         logGroup: `/aws/ecs/ia-express`,
+    //         logStreamPrefix: "ia",
+    //       },
+    //     },
+    //   },
+    // );
 
-    // Ensure roles are created before the service
-    expressService.node.addDependency(taskExecutionRole);
-    expressService.node.addDependency(taskRole);
-    expressService.node.addDependency(infrastructureRole);
+    // // Ensure roles are created before the service
+    // expressService.node.addDependency(taskExecutionRole);
+    // expressService.node.addDependency(taskRole);
+    // expressService.node.addDependency(infrastructureRole);
 
-    new cdk.CfnOutput(this, "output-ia-ecs-url", {
-      value: expressService.attrEndpoint,
-    });
+    // new cdk.CfnOutput(this, "output-ia-ecs-url", {
+    //   value: expressService.attrEndpoint,
+    // });
   }
 }
