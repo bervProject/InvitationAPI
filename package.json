@@ -10,7 +10,7 @@
     "import:dev": "nodemon src/name-loader-program.ts"
   },
   "dependencies": {
-    "body-parser": "^2.3.0",
+    "body-parser": "^2.4.0",
     "csv-parse": "^7.0.2",
     "dotenv": "^17.4.2",
     "express": "^5.2.0",
